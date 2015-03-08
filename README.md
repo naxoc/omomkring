@@ -15,3 +15,4 @@ So far, this bleeding edge regular expression concept is implemented in:
 
 * PHP
 * Silex (as a webservice)
+* Backbonejs (using the Silex service)

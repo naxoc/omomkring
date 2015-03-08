@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="da-DK">
+<head>
+  <meta charset="UTF-8">
+  <title>Omomkring</title>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+</head>
+<body>
+
+<div class="container">
+  <h1>Omomkring</h1>
+
+  <div class="page"></div>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+<script src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+
+<script type="text/template" id="around-text-template">
+
+  <form class="around-form">
+    <div class="form-group">
+      <textarea class="form-control" name="original" rows="12"><%= original %></textarea>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary go-around">Kør omkring omkring!</button>
+      <button class="btn btn-danger clear-around">Ryd</button>
+    </div>
+  </form>
+
+  <hr />
+
+  <div class="processed-text">
+    <h4>Nu med mere omkring</h4>
+    <p>
+      <%= transformed.replace(new RegExp('\r?\n', 'g'), '<br/>') %>
+    </p>
+  </div>
+</script>
+
+<script>
+
+  AroundText = Backbone.Model.extend({
+    url: '/silex/web/1/text'
+  });
+
+  var AroundTextView = Backbone.View.extend({
+    el: '.page',
+    events: {
+      'submit .around-form': 'transformText',
+      'click .clear-around': 'clearAll'
+    },
+
+    initialize: function () {
+      this.listenTo(this.model, 'change', this.render);
+      this.model.fetch();
+    },
+    render: function (options) {
+      var template = _.template($('#around-text-template').html(), this.model.toJSON());
+      this.$el.html(template);
+
+    },
+    transformText: function (ev) {
+      ev.preventDefault();
+      var formValue = {original: $('textarea', ev.currentTarget).val()};
+      this.model.save(formValue);
+    },
+    clearAll: function (ev) {
+      ev.preventDefault();
+      this.model.save({original: ''});
+    }
+  });
+
+  aroundView = new AroundTextView({model: new AroundText()});
+</script>
+</body>
+</html>
