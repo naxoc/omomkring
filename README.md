@@ -14,3 +14,4 @@ It is a form you can enter some text in and then all occurrences of the word "om
 So far, this bleeding edge regular expression concept is implemented in:
 
 * PHP
+* Silex (as a webservice)
